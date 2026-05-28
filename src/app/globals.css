@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Reset ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #e0d8c8;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: #060606; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C9A84C; }
+
+/* ── Selection ─────────────────────────────────────────────────────── */
+::selection { background: rgba(201,168,76,0.22); color: #E8C97A; }
+
+/* ── Gold divider ──────────────────────────────────────────────────── */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(201,168,76,0.35) 20%,
+    rgba(232,201,122,0.65) 50%,
+    rgba(201,168,76,0.35) 80%,
+    transparent 100%);
+}
+
+/* ── Gold text gradient ─────────────────────────────────────────────── */
+.gold-text {
+  background: linear-gradient(135deg, #B8932A 0%, #E8C97A 35%, #FFF0A0 55%, #E8C97A 75%, #B8932A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-bg {
+  background: linear-gradient(135deg, #B8932A 0%, #D4AF37 30%, #F0D060 55%, #D4AF37 75%, #B8932A 100%);
+}
+
+/* ── Video card overlay ─────────────────────────────────────────────── */
+.video-card .play-overlay     { opacity: 0; transition: opacity 0.28s ease; }
+.video-card:hover .play-overlay { opacity: 1; }
+
+/* ── Focus ring ─────────────────────────────────────────────────────── */
+button:focus-visible, a:focus-visible {
+  outline: 2px solid rgba(201,168,76,0.5);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── Logo orbit light ───────────────────────────────────────────────── */
+@keyframes logo-orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+/* ── Ambient glow breathe (behind logo) ─────────────────────────────── */
+@keyframes logo-ambient-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.22); }
+}
+
+/* ── Sparkle star twinkle ───────────────────────────────────────────── */
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0)   rotate(0deg); }
+  40%, 60%  { opacity: 1; transform: scale(1)   rotate(45deg); }
+}
+
+/* ── Card shimmer sweep ─────────────────────────────────────────────── */
+@keyframes card-shimmer {
+  0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(400%) skewX(-18deg); opacity: 0; }
+}

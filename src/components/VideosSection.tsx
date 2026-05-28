@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Play, Eye, Calendar, Youtube } from 'lucide-react';
-import { StylizedWord } from './StylizedWord';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { VideoData } from '@/app/api/videos/route';
 
 /* ─── Fallback data — shown instantly on first render ───────────────── */
@@ -15,194 +14,217 @@ const FALLBACK: VideoData[] = [
   { id: 'gPoUc3v4c28', title: 'NEW BULLRUSH STAMPEDE Slot Machine',                        date: '12 May 2026', views: '' },
 ];
 
-/* ─── Thumbnail ──────────────────────────────────────────────────────── */
-function Thumbnail({ id, title, large = false }: { id: string; title: string; large?: boolean }) {
-  const [failed, setFailed] = useState(false);
-  const src = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+/* ─── Slide animation variants (direction-aware) ────────────────────── */
+// Reel positioning: maps a slide's signed offset from the active slide to a
+// transform. Offset 0 is front-and-center; ±1 are the dimmed side slides; ±2
+// sit further back at zero opacity, ready to slide in. STEP is a % of the
+// slide's own width, so it stays proportional at every screen size.
+const STEP = 82;
+const pose = (offset: number) => {
+  const a = Math.abs(offset);
+  return {
+    x: `${-50 + offset * STEP}%`,
+    y: '-50%',
+    scale: a === 0 ? 1 : a === 1 ? 0.52 : 0.42,
+    opacity: a === 0 ? 1 : a === 1 ? 0.55 : 0,
+    filter: a === 0 ? 'brightness(1)' : 'brightness(0.55)',
+    zIndex: 30 - a * 10,
+  };
+};
 
-  return failed ? (
-    <div
-      className="absolute inset-0 flex items-center justify-center"
-      style={{ background: '#050505' }}
-    >
-      <div className="absolute inset-0 opacity-[0.04]"
-        style={{ backgroundImage: 'repeating-linear-gradient(-45deg, #C9A84C 0, #C9A84C 1px, transparent 0, transparent 50%)', backgroundSize: '12px 12px' }}
-      />
-      <div className="relative z-10 flex flex-col items-center gap-3 opacity-30">
-        <div className={`rounded-full flex items-center justify-center ${large ? 'w-14 h-14' : 'w-10 h-10'}`}
-          style={{ background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.2)' }}>
-          <Play size={large ? 22 : 16} style={{ color: '#C9A84C', marginLeft: '2px' }} fill="#C9A84C" />
-        </div>
-        <span className="text-[9px] uppercase font-medium text-center px-4 leading-relaxed"
-          style={{ letterSpacing: '0.14em', color: 'rgba(201,168,76,0.6)', maxWidth: '140px' }}>
-          {title.substring(0, 40)}{title.length > 40 ? '…' : ''}
-        </span>
-      </div>
-    </div>
-  ) : (
-    /* eslint-disable-next-line @next/next/no-img-element */
-    <img src={src} alt={title} onError={() => setFailed(true)}
-      className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-  );
-}
+const titleVariants = {
+  enter:  (dir: number) => ({ x: dir >= 0 ? 28 : -28, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit:   (dir: number) => ({ x: dir >= 0 ? -28 : 28, opacity: 0 }),
+};
 
-/* ─── Small video card ───────────────────────────────────────────────── */
-function SmallCard({ video, index }: { video: VideoData; index: number }) {
+/* ─── Thumbnail (with graceful fallback) ─────────────────────────────── */
+// hqdefault always exists for a public video and returns a real image (unlike
+// maxresdefault, which 404s to a gray placeholder for many uploads). Fall back
+// to mqdefault on the rare error.
+function Thumbnail({ id, title }: { id: string; title: string }) {
+  const [errored, setErrored] = useState(false);
+  const src = `https://img.youtube.com/vi/${id}/${errored ? 'mqdefault' : 'hqdefault'}.jpg`;
   return (
-    <motion.a
-      href={`https://youtube.com/watch?v=${video.id}`}
-      target="_blank" rel="noopener noreferrer"
-      initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }} transition={{ delay: index * 0.08, duration: 0.55 }}
-      className="video-card group block overflow-hidden"
-      style={{ background: '#050505', border: '1px solid rgba(255,255,255,0.06)', transition: 'border-color 0.3s, box-shadow 0.3s', boxShadow: '0 0 12px rgba(255,255,255,0.04)' }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,168,76,0.22)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(201,168,76,0.2)'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 0 12px rgba(255,255,255,0.04)'; }}
-    >
-      <div className="relative aspect-video overflow-hidden">
-        <Thumbnail id={video.id} title={video.title} />
-        <div className="play-overlay absolute inset-0 flex items-center justify-center"
-          style={{ background: 'rgba(6,6,6,0.45)' }}>
-          <div className="w-11 h-11 rounded-full flex items-center justify-center"
-            style={{ background: 'rgba(201,168,76,0.85)', boxShadow: '0 0 20px rgba(201,168,76,0.3)' }}>
-            <Play size={17} style={{ color: '#060606', marginLeft: '2px' }} fill="#060606" />
-          </div>
-        </div>
-      </div>
-      <div className="p-3.5">
-        <h3 className="font-sans font-medium text-sm leading-snug line-clamp-2"
-          style={{ color: 'rgba(255,255,255,0.72)' }}>
-          {video.title}
-        </h3>
-        <div className="flex items-center gap-3 mt-2.5">
-          {video.views && (
-            <span className="flex items-center gap-1 text-[11px]" style={{ color: 'rgba(255,255,255,0.28)' }}>
-              <Eye size={10} /> {video.views}
-            </span>
-          )}
-          {video.date && (
-            <span className="flex items-center gap-1 text-[11px]" style={{ color: 'rgba(255,255,255,0.28)' }}>
-              <Calendar size={10} /> {video.date}
-            </span>
-          )}
-        </div>
-      </div>
-    </motion.a>
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
+      src={src}
+      alt={title}
+      onError={() => setErrored(true)}
+      className="absolute inset-0 w-full h-full object-cover"
+      draggable={false}
+    />
   );
 }
 
 /* ─── Section ────────────────────────────────────────────────────────── */
 export default function VideosSection() {
   const [videos, setVideos] = useState<VideoData[]>(FALLBACK);
+  const [active, setActive] = useState(0);
+  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     fetch('/api/videos')
       .then(r => r.json())
-      .then((data: VideoData[]) => { if (data.length > 0) setVideos(data); })
+      .then((data: VideoData[]) => { if (data.length > 0) { setVideos(data); setActive(0); } })
       .catch(() => { /* keep fallback */ });
   }, []);
 
-  const featured = videos[0];
-  const recent   = videos.slice(1, 5);
+  const n = videos.length;
+  const go = (dir: number) => { setDirection(dir); setActive(a => (a + dir + n) % n); };
+
+  const featured = videos[active];
+
+  // Compute each slide's nearest signed offset from the active one (wrapping
+  // around the ends so the reel is endless), keeping only the visible window.
+  const slides = videos
+    .map((v, i) => {
+      let offset = i - active;
+      if (offset > n / 2) offset -= n;
+      else if (offset < -n / 2) offset += n;
+      return { v, offset };
+    })
+    .filter(s => Math.abs(s.offset) <= 2);
 
   return (
     <section id="videos" className="relative py-24 overflow-hidden" style={{ background: '#0a0a0a' }}>
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} transition={{ duration: 0.6 }}
-          className="text-center mb-10"
+          className="flex items-center justify-center gap-3 mb-12"
         >
-          <span className="text-[10px] uppercase font-medium" style={{ letterSpacing: '0.2em', color: 'rgba(201,168,76,0.55)' }}>
-            Latest Content
+          <span
+            className="inline-flex items-center justify-center rounded-lg"
+            style={{ width: 46, height: 32, background: 'linear-gradient(180deg, #E7C766 0%, #C9A84C 100%)', boxShadow: '0 4px 14px rgba(201,168,76,0.35)' }}
+          >
+            <Play size={16} fill="#0a0a0a" style={{ color: '#0a0a0a', marginLeft: 2 }} />
           </span>
-          <h2 className="font-display font-semibold tracking-tight mt-0.5"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: 'rgba(255,255,255,0.88)' }}>
-            <StylizedWord text="Recent" />{' '}
-            <StylizedWord text="Videos" className="gold-text font-semibold" />
+          <h2 className="font-display font-bold tracking-tight"
+            style={{ fontSize: 'clamp(1.7rem, 4vw, 2.5rem)' }}>
+            <span className="gold-text">YouTube</span>{' '}
+            <span style={{ color: '#ffffff' }}>Highlights</span>
           </h2>
         </motion.div>
 
-        {/* Featured video */}
-        <motion.div
-          initial={{ opacity: 0, y: 22 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-6"
-        >
-          <a href={`https://youtube.com/watch?v=${featured.id}`} target="_blank" rel="noopener noreferrer"
-            className="video-card group block overflow-hidden"
-            style={{ background: '#050505', border: '1px solid rgba(255,255,255,0.06)', transition: 'border-color 0.3s, box-shadow 0.3s', boxShadow: '0 0 12px rgba(255,255,255,0.04)' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(201,168,76,0.22)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(201,168,76,0.2)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.boxShadow = '0 0 12px rgba(255,255,255,0.04)'; }}>
-            <div className="grid md:grid-cols-[1.55fr_1fr]">
-              <div className="relative aspect-video md:aspect-auto overflow-hidden" style={{ minHeight: '220px' }}>
-                <Thumbnail id={featured.id} title={featured.title} large />
-                <div className="play-overlay absolute inset-0 flex items-center justify-center"
-                  style={{ background: 'rgba(6,6,6,0.4)' }}>
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center"
-                    style={{ background: 'rgba(201,168,76,0.88)', boxShadow: '0 0 28px rgba(201,168,76,0.35)' }}>
-                    <Play size={26} style={{ color: '#060606', marginLeft: '3px' }} fill="#060606" />
-                  </div>
-                </div>
-                <span className="absolute top-3 left-3 text-[9px] font-bold uppercase px-2.5 py-1"
-                  style={{ letterSpacing: '0.14em', background: 'rgba(201,168,76,0.9)', color: '#060606' }}>
-                  Latest
-                </span>
-              </div>
-              <div className="flex flex-col justify-between p-7 sm:p-9">
-                <div>
-                  <span className="text-[9px] uppercase font-medium block mb-3"
-                    style={{ letterSpacing: '0.18em', color: 'rgba(201,168,76,0.55)' }}>
-                    Featured Upload
-                  </span>
-                  <h3 className="font-display font-medium leading-snug"
-                    style={{ fontSize: 'clamp(1.05rem, 2.2vw, 1.4rem)', color: 'rgba(255,255,255,0.82)' }}>
-                    {featured.title}
-                  </h3>
-                </div>
-                <div>
-                  <div className="divider-gold my-5" />
-                  <div className="flex items-center gap-5">
-                    {featured.views && (
-                      <span className="flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.28)' }}>
-                        <Eye size={12} /> {featured.views} views
-                      </span>
-                    )}
-                    {featured.date && (
-                      <span className="flex items-center gap-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.28)' }}>
-                        <Calendar size={12} /> {featured.date}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </motion.div>
+        {/* Coverflow reel */}
+        <div className="relative select-none"
+          style={{ minHeight: 'clamp(240px, 34vw, 400px)' }}>
 
-        {/* 4-video grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {recent.map((video, i) => (
-            <SmallCard key={video.id} video={video} index={i} />
-          ))}
+          {/* Reel slides — each video keeps its own element (keyed by id) and
+              framer-motion animates it between reel positions on navigation. */}
+          {slides.map(({ v, offset }) => {
+            const isFront = offset === 0;
+            return (
+              <motion.div
+                key={v.id}
+                className="absolute"
+                style={{ top: '50%', left: '50%', width: 'clamp(280px, 48vw, 600px)', aspectRatio: '16/9' }}
+                initial={false}
+                animate={pose(offset)}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {isFront ? (
+                  <a
+                    href={`https://youtube.com/watch?v=${v.id}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="group block w-full h-full overflow-hidden rounded-2xl"
+                    style={{ boxShadow: '0 30px 80px rgba(0,0,0,0.65)' }}
+                  >
+                    <Thumbnail id={v.id} title={v.title} />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ background: 'rgba(6,6,6,0.35)' }}>
+                      <div className="w-16 h-16 rounded-full flex items-center justify-center"
+                        style={{ background: '#FF0000', boxShadow: '0 0 28px rgba(255,0,0,0.45)' }}>
+                        <Play size={26} fill="#fff" style={{ color: '#fff', marginLeft: 3 }} />
+                      </div>
+                    </div>
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => go(offset > 0 ? 1 : -1)}
+                    aria-label={offset > 0 ? 'Next video' : 'Previous video'}
+                    tabIndex={-1}
+                    className="block w-full h-full overflow-hidden rounded-xl cursor-pointer"
+                    style={{ pointerEvents: Math.abs(offset) >= 2 ? 'none' : 'auto' }}
+                  >
+                    <Thumbnail id={v.id} title={v.title} />
+                  </button>
+                )}
+              </motion.div>
+            );
+          })}
+
+          {/* Chevron nav buttons */}
+          <button
+            onClick={() => go(-1)}
+            aria-label="Previous video"
+            className="absolute z-30 flex items-center justify-center rounded-full transition-all duration-300"
+            style={{
+              top: '50%',
+              left: 'max(6px, calc(50% - clamp(150px, 25vw, 300px) - 48px))',
+              transform: 'translateY(-50%)',
+              width: 38, height: 38,
+              background: 'rgba(0,0,0,0.55)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              color: 'rgba(255,255,255,0.8)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.8)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={() => go(1)}
+            aria-label="Next video"
+            className="absolute z-30 flex items-center justify-center rounded-full transition-all duration-300"
+            style={{
+              top: '50%',
+              right: 'max(6px, calc(50% - clamp(150px, 25vw, 300px) - 48px))',
+              transform: 'translateY(-50%)',
+              width: 38, height: 38,
+              background: 'rgba(0,0,0,0.55)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              color: 'rgba(255,255,255,0.8)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.8)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
 
-        {/* View all */}
-        <motion.div
-          initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-          viewport={{ once: true }} transition={{ delay: 0.3 }}
-          className="mt-10 text-center"
-        >
-          <a href="https://youtube.com/@sydneyslotsking" target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 text-xs uppercase font-medium transition-all duration-300"
-            style={{ letterSpacing: '0.16em', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.35)' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'; }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.35)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}>
-            <Youtube size={14} /> View All Videos on YouTube
+        {/* Title + CTA */}
+        <div className="text-center mt-8">
+          <AnimatePresence custom={direction} mode="wait" initial={false}>
+            <motion.p
+              key={featured.id}
+              custom={direction}
+              variants={titleVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3 }}
+              className="font-medium uppercase mx-auto max-w-2xl"
+              style={{ letterSpacing: '0.08em', fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)' }}
+            >
+              {featured.title}
+            </motion.p>
+          </AnimatePresence>
+
+          <a
+            href={`https://youtube.com/watch?v=${featured.id}`}
+            target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 mt-7 px-9 py-3.5 rounded-lg text-xs font-bold uppercase transition-all duration-300"
+            style={{ letterSpacing: '0.12em', background: '#FF0000', color: '#ffffff', boxShadow: '0 10px 30px rgba(255,0,0,0.3)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#FF0000'; e.currentTarget.style.transform = 'translateY(0)'; }}
+          >
+            <Play size={13} fill="#fff" style={{ color: '#fff' }} /> Watch Now
           </a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -4,45 +4,29 @@ import { motion } from 'framer-motion';
 import { Youtube, Instagram, Facebook } from 'lucide-react';
 import { StylizedWord } from './StylizedWord';
 
+const GOLD = '#C9A84C';
+
 const socials = [
   {
-    label:       'YouTube',
-    handle:      '@sydneyslotsking',
-    href:        'https://youtube.com/@sydneyslotsking',
-    Icon:        Youtube,
-    iconColor:   '#FF4444',
-    hoverColor:  'rgba(239,68,68,0.5)',
-    glowColor:   'rgba(239,68,68,0.12)',
-    topGleam:    'rgba(239,68,68,0.6)',
-    metric:      '13K+',
-    metricLabel: 'Subscribers',
-    desc:        'Main content hub — weekly pokies sessions, big wins & jackpots.',
+    label: 'YouTube',
+    sub:   'Subscribe on channel',
+    cta:   'Subscribe',
+    href:  'https://youtube.com/@sydneyslotsking',
+    Icon:  Youtube,
   },
   {
-    label:       'Instagram',
-    handle:      '@sydneyslotsking',
-    href:        'https://www.instagram.com/sydneyslotsking?igsh=aWl2aWg1NmU4eGt6',
-    Icon:        Instagram,
-    iconColor:   '#E1306C',
-    hoverColor:  'rgba(236,72,153,0.5)',
-    glowColor:   'rgba(236,72,153,0.1)',
-    topGleam:    'rgba(236,72,153,0.6)',
-    metric:      '7K+',
-    metricLabel: 'Followers',
-    desc:        'Highlights, casino reels, and exclusive content sneak peeks.',
+    label: 'Instagram',
+    sub:   'Follow the reels',
+    cta:   'Follow',
+    href:  'https://www.instagram.com/sydneyslotsking?igsh=aWl2aWg1NmU4eGt6',
+    Icon:  Instagram,
   },
   {
-    label:       'Facebook',
-    handle:      'Sydney Slots King',
-    href:        'https://www.facebook.com/profile.php?id=61559592762621&mibextid=ZbWKwL',
-    Icon:        Facebook,
-    iconColor:   '#1877F2',
-    hoverColor:  'rgba(59,130,246,0.5)',
-    glowColor:   'rgba(59,130,246,0.1)',
-    topGleam:    'rgba(59,130,246,0.6)',
-    metric:      '1K+',
-    metricLabel: 'Followers',
-    desc:        'Updates, highlights, and community content.',
+    label: 'Facebook',
+    sub:   'Join the community',
+    cta:   'Join',
+    href:  'https://www.facebook.com/profile.php?id=61559592762621&mibextid=ZbWKwL',
+    Icon:  Facebook,
   },
 ];
 
@@ -51,7 +35,7 @@ export default function SocialsSection() {
     <section id="socials" className="relative py-24 overflow-hidden" style={{ background: 'rgba(17,17,17,0.5)' }}>
       <div className="divider-gold absolute top-0 inset-x-0" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
+      <div className="relative max-w-6xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
         <motion.div
@@ -66,14 +50,14 @@ export default function SocialsSection() {
           </span>
           <h2 className="font-display font-semibold tracking-tight mt-0.5" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: 'rgba(255,255,255,0.88)' }}>
             <StylizedWord text="Follow" />{' '}
-            <StylizedWord text="The" />{' '}
-            <StylizedWord text="Journey" className="gold-text font-semibold" />
+            <StylizedWord text="Our" />{' '}
+            <StylizedWord text="Socials" className="gold-text font-semibold" />
           </h2>
         </motion.div>
 
         {/* Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {socials.map(({ label, handle, href, Icon, iconColor, hoverColor, glowColor, topGleam, metric, metricLabel, desc }, i) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {socials.map(({ label, sub, cta, href, Icon }, i) => (
             <motion.a
               key={label}
               href={href}
@@ -83,67 +67,74 @@ export default function SocialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07, duration: 0.55 }}
-              className="group block p-6 sm:p-7 relative overflow-hidden"
+              className="group relative flex flex-col items-center text-center px-6 py-10 rounded-xl overflow-hidden"
               style={{
-                background: '#050505',
-                border: '1px solid rgba(255,255,255,0.08)',
-                boxShadow: `0 0 16px ${glowColor.replace('0.1', '0.35').replace('0.12', '0.4')}, inset 0 0 60px ${glowColor}`,
-                transition: 'border-color 0.3s, box-shadow 0.3s',
+                zIndex: 38, // paint above the global pattern overlay (z-35) so the card reads as solid
+                background: 'linear-gradient(160deg, #1c180f 0%, #121008 60%, #0d0b06 100%)',
+                border: '1px solid rgba(201,168,76,0.16)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 30px rgba(0,0,0,0.5)',
+                transition: 'border-color 0.35s, box-shadow 0.35s, transform 0.35s',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.borderColor = hoverColor;
-                e.currentTarget.style.boxShadow = `0 0 32px ${hoverColor}, 0 0 60px ${hoverColor.replace('0.5', '0.2')}, inset 0 0 80px ${glowColor}`;
+                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.55)';
+                e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.06), 0 0 34px rgba(201,168,76,0.22), 0 14px 40px rgba(0,0,0,0.6)`;
+                e.currentTarget.style.transform = 'translateY(-4px)';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-                e.currentTarget.style.boxShadow = `0 0 16px ${glowColor.replace('0.1', '0.35').replace('0.12', '0.4')}, inset 0 0 60px ${glowColor}`;
+                e.currentTarget.style.borderColor = 'rgba(201,168,76,0.16)';
+                e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.04), 0 8px 30px rgba(0,0,0,0.5)';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              {/* Top gleam line */}
-              <div style={{
-                position: 'absolute', top: 0, left: '15%', right: '15%', height: '1px',
-                background: `linear-gradient(to right, transparent, ${topGleam}, transparent)`,
-                filter: 'blur(1px)',
-              }} />
-              {/* Corner glow */}
-              <div style={{
-                position: 'absolute', top: '-30px', left: '-20px',
-                width: '120px', height: '120px', borderRadius: '50%',
-                background: `radial-gradient(circle, ${glowColor.replace('0.1', '0.35').replace('0.12', '0.4')} 0%, transparent 70%)`,
-                filter: 'blur(12px)',
-                pointerEvents: 'none',
-              }} />
+              {/* Top glow behind icon */}
+              <div
+                aria-hidden
+                style={{
+                  position: 'absolute', top: '-40px', left: '50%', transform: 'translateX(-50%)',
+                  width: '220px', height: '160px',
+                  background: `radial-gradient(circle, rgba(201,168,76,0.28) 0%, transparent 68%)`,
+                  filter: 'blur(14px)',
+                  pointerEvents: 'none',
+                }}
+              />
 
-              {/* Icon + label */}
-              <div className="flex items-start justify-between mb-5 relative z-10">
-                <Icon size={22} style={{ color: iconColor, filter: `drop-shadow(0 0 8px ${iconColor})`, transition: 'filter 0.3s' }} />
-                <span className="text-[9px] uppercase font-medium" style={{ letterSpacing: '0.16em', color: 'rgba(255,255,255,0.25)' }}>
+              {/* Icon */}
+              <Icon
+                size={40}
+                strokeWidth={1.5}
+                className="relative z-10"
+                style={{ color: '#F5E9C8', filter: `drop-shadow(0 0 14px rgba(201,168,76,0.6))` }}
+              />
+
+              {/* Title with flanking lines */}
+              <div className="flex items-center gap-3 w-full mt-7 mb-2 relative z-10">
+                <span style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.35))' }} />
+                <h3 className="font-display font-bold uppercase" style={{ letterSpacing: '0.1em', fontSize: '1.05rem', color: 'rgba(255,255,255,0.92)' }}>
                   {label}
-                </span>
+                </h3>
+                <span style={{ flex: 1, height: '1px', background: 'linear-gradient(to left, transparent, rgba(201,168,76,0.35))' }} />
               </div>
 
-              {/* Metric */}
-              <div className="mb-4 relative z-10">
-                {metric && (
-                  <div className="gold-text font-display font-semibold leading-none" style={{ fontSize: '1.9rem' }}>
-                    {metric}
-                  </div>
-                )}
-                <div className="text-[9px] uppercase font-medium mt-1" style={{ letterSpacing: '0.16em', color: 'rgba(255,255,255,0.28)' }}>
-                  {metricLabel}
-                </div>
-              </div>
-
-              {/* Thin divider */}
-              <div className="relative z-10" style={{ width: '32px', height: '1px', background: 'rgba(255,255,255,0.1)', marginBottom: '16px' }} />
-
-              {/* Handle + desc */}
-              <div className="text-xs font-medium mb-1 relative z-10" style={{ color: 'rgba(255,255,255,0.45)', letterSpacing: '0.04em' }}>
-                {handle}
-              </div>
-              <p className="text-xs font-light leading-relaxed relative z-10" style={{ color: 'rgba(255,255,255,0.28)' }}>
-                {desc}
+              {/* Subtitle */}
+              <p className="text-[11px] uppercase font-medium relative z-10" style={{ letterSpacing: '0.16em', color: 'rgba(255,255,255,0.4)' }}>
+                {sub}
               </p>
+
+              {/* Button */}
+              <span
+                className="mt-8 px-8 py-2.5 rounded-md font-bold uppercase text-xs relative z-10"
+                style={{
+                  letterSpacing: '0.1em',
+                  background: `linear-gradient(180deg, #E7C766 0%, ${GOLD} 100%)`,
+                  color: '#0a0a0a',
+                  boxShadow: '0 6px 18px rgba(201,168,76,0.3)',
+                  transition: 'filter 0.3s, box-shadow 0.3s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(201,168,76,0.45)'; }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; e.currentTarget.style.boxShadow = '0 6px 18px rgba(201,168,76,0.3)'; }}
+              >
+                {cta}
+              </span>
             </motion.a>
           ))}
         </div>

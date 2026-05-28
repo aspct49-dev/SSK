@@ -24,12 +24,14 @@ const patternStyle: CSSProperties = {
      filter:invert(1)  → white bg becomes black  (screen-blends away)
                          gray lines become dark   (adds subtle glow via screen)
      mix-blend-mode:screen → black = invisible, dark-grey = faint brightening
-     zIndex 5 → above content (z-index 1) so screen-blend actually applies,
-                below navbar (z-index 50) and mobile menu (z-index 40)
+     zIndex 35 → above the section content (which tops out at z-30) so the
+                 screen-blend applies, below navbar (50) and mobile menu (40).
+                 Elements that opt out of the texture (e.g. the social cards)
+                 set a z-index above this value to paint over the pattern.
      pointer-events:none → no click interference */
   position:        'fixed',
   inset:           0,
-  zIndex:          5,
+  zIndex:          35,
   pointerEvents:   'none',
   backgroundImage: "url('/pattern.jpg')",
   backgroundRepeat:'repeat',
@@ -41,7 +43,6 @@ const patternStyle: CSSProperties = {
 
 const contentStyle: CSSProperties = {
   position: 'relative',
-  zIndex:   1,
 };
 
 export default function Home() {

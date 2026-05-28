@@ -5,7 +5,7 @@ import { Youtube, Instagram, Facebook, Shield } from 'lucide-react';
 
 const footerLinks = [
   { label: 'Videos',    href: '#videos'    },
-  { label: 'Giveaways', href: '#giveaways' },
+  { label: 'Giveaways', href: '/giveaways' },
   { label: 'About',     href: '#about'     },
   { label: 'Socials',   href: '#socials'   },
 ];
@@ -30,25 +30,13 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-5">
-              <div style={{
-                position: 'relative', width: '30px', height: '30px', flexShrink: 0,
-                borderRadius: '50%', overflow: 'hidden',
-                boxShadow: '0 0 0 1px rgba(201,168,76,0.2)',
-              }}>
-                <Image
-                  src="/logo.jpeg"
-                  alt="Sydney Slots King"
-                  fill
-                  sizes="30px"
-                  style={{ objectFit: 'cover', objectPosition: 'center 38%', mixBlendMode: 'screen', filter: 'contrast(1.3) saturate(1.2)', transform: 'scale(1.12)' }}
-                />
-              </div>
-              <span
-                className="font-display font-semibold uppercase"
-                style={{ fontSize: '0.8rem', letterSpacing: '0.22em', color: 'rgba(245,230,200,0.5)' }}
-              >
-                Sydney Slots King
-              </span>
+              <Image
+                src="/sk-logo.png"
+                alt="Sydney Slots King"
+                width={677}
+                height={369}
+                style={{ width: '110px', height: 'auto', display: 'block' }}
+              />
             </div>
             <p
               className="font-sans font-light leading-relaxed mb-6 max-w-[260px]"

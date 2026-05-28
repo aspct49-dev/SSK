@@ -1,4 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@font-face {
+  font-family: 'PPNeueCorp';
+  src: url('/fonts/PPNeueCorp-NormalUltralight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPNeueCorp';
+  src: url('/fonts/PPNeueCorp-NormalMedium.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PPNeueCorp';
+  src: url('/fonts/PPNeueCorp-NormalUltrabold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
@@ -15,7 +37,7 @@ html {
 body {
   background-color: #0a0a0a;
   color: #e0d8c8;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'PPNeueCorp', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;

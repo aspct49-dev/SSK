@@ -157,7 +157,7 @@ function GiveawayCard({ gw, index }: { gw: Giveaway; index: number }) {
       transition={{ delay: index * 0.09, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="relative overflow-hidden"
       style={{
-        background: '#050505',
+        background: '#000000',
         border: expired
           ? '1px solid rgba(255,255,255,0.05)'
           : '1px solid rgba(201,168,76,0.16)',
@@ -166,6 +166,8 @@ function GiveawayCard({ gw, index }: { gw: Giveaway; index: number }) {
           : '0 0 16px rgba(201,168,76,0.14)',
         opacity: expired ? 0.55 : 1,
         transition: 'border-color 0.3s, box-shadow 0.3s',
+        position: 'relative',
+        zIndex: 38,
       }}
       onMouseEnter={e => {
         if (!expired) {
@@ -178,6 +180,17 @@ function GiveawayCard({ gw, index }: { gw: Giveaway; index: number }) {
         e.currentTarget.style.borderColor = expired ? 'rgba(255,255,255,0.05)' : 'rgba(201,168,76,0.16)';
       }}
     >
+      {/* Shimmer */}
+      {!expired && (
+        <div aria-hidden style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
+          width: '50%',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.06) 40%, rgba(232,201,122,0.12) 50%, rgba(201,168,76,0.06) 60%, transparent 100%)',
+          animation: 'card-shimmer 3.5s ease-in-out infinite',
+          animationDelay: '0s',
+        }} />
+      )}
+
       {/* Status badge */}
       <div
         className="absolute top-5 right-5 px-2.5 py-1 text-[9px] font-bold uppercase"
@@ -194,17 +207,17 @@ function GiveawayCard({ gw, index }: { gw: Giveaway; index: number }) {
         {expired ? 'ENDED' : gw.status === 'upcoming' ? 'SOON' : 'LIVE'}
       </div>
 
-      <div className="p-6 sm:p-8">
+      <div className="p-6 sm:p-8 flex flex-col items-center text-center relative z-10">
         {/* Prize header */}
-        <div className="mb-5">
-          <div className="flex items-center gap-2 mb-1.5">
+        <div className="mb-5 w-full">
+          <div className="flex items-center justify-center gap-2 mb-1.5">
             <Crown size={12} style={{ color: 'rgba(201,168,76,0.5)' }} />
             <span className="text-[9px] uppercase font-medium" style={{ letterSpacing: '0.18em', color: 'rgba(201,168,76,0.5)' }}>
               Prize
             </span>
           </div>
           <h3
-            className="font-display font-semibold leading-tight pr-16"
+            className="font-display font-semibold leading-tight"
             style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)', color: 'rgba(255,255,255,0.85)' }}
           >
             {gw.title}
@@ -215,7 +228,7 @@ function GiveawayCard({ gw, index }: { gw: Giveaway; index: number }) {
         </div>
 
         {/* Countdown */}
-        <div className="mb-5">
+        <div className="mb-5 flex flex-col items-center">
           <div className="flex items-center gap-1.5 mb-2.5">
             <Clock size={11} style={{ color: 'rgba(255,255,255,0.22)' }} />
             <span className="text-[9px] uppercase font-medium" style={{ letterSpacing: '0.16em', color: 'rgba(255,255,255,0.22)' }}>
@@ -226,14 +239,14 @@ function GiveawayCard({ gw, index }: { gw: Giveaway; index: number }) {
         </div>
 
         {/* Divider */}
-        <div className="divider-gold mb-5" />
+        <div className="divider-gold mb-5 w-full" />
 
         {/* Requirements */}
-        <div className="mb-5">
+        <div className="mb-5 w-full">
           <p className="text-[9px] uppercase font-medium mb-3" style={{ letterSpacing: '0.16em', color: 'rgba(255,255,255,0.28)' }}>
             Entry Requirements
           </p>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 items-center">
             {gw.requirements.map((req) => {
               const Icon = REQ_ICONS[req] ?? CheckCircle2;
               return (
@@ -249,7 +262,7 @@ function GiveawayCard({ gw, index }: { gw: Giveaway; index: number }) {
         </div>
 
         {/* Footer row */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center justify-center flex-wrap gap-3 w-full">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 text-xs font-light" style={{ color: 'rgba(255,255,255,0.28)' }}>
               <Users size={11} />
@@ -292,10 +305,10 @@ export default function GiveawaySection() {
   const active = GIVEAWAYS.filter(g => g.status === 'active');
 
   return (
-    <section id="giveaways" className="relative py-24 overflow-hidden" style={{ background: 'rgba(17,17,17,0.6)' }}>
+    <section id="giveaways" className="relative pt-10 pb-24 overflow-hidden" style={{ background: 'rgba(17,17,17,0.6)' }}>
       <div className="divider-gold absolute top-0 inset-x-0" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
         <motion.div
@@ -305,12 +318,16 @@ export default function GiveawaySection() {
           transition={{ duration: 0.6 }}
           className="mb-12 text-center"
         >
-          <span className="text-[10px] uppercase font-medium" style={{ letterSpacing: '0.2em', color: 'rgba(201,168,76,0.55)' }}>
-            Community Rewards
-          </span>
-          <h2 className="font-display font-semibold tracking-tight mt-1" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: 'rgba(255,255,255,0.88)' }}>
-            <StylizedWord text="Active" />{' '}
-            <StylizedWord text="Giveaways" className="gold-text font-semibold" />
+          <h2
+            className="font-bold flex flex-col items-center text-center"
+            style={{ fontFamily: '"PPNeueCorp", system-ui, sans-serif', gap: '0.25em' }}
+          >
+            <span className="uppercase" style={{ fontSize: 'clamp(0.65rem, 1.5vw, 0.85rem)', letterSpacing: '0.35em', color: 'rgba(255,255,255,0.45)' }}>
+              JOIN THE
+            </span>
+            <span className="gold-text uppercase" style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)', letterSpacing: '0.06em', lineHeight: 1 }}>
+              GIVEAWAY
+            </span>
           </h2>
           <div className="flex items-center justify-center gap-2 text-xs mt-2" style={{ color: 'rgba(255,255,255,0.18)' }}>
             <div className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
@@ -320,7 +337,7 @@ export default function GiveawaySection() {
 
         {/* Active giveaways */}
         {active.length > 0 && (
-          <div className="grid md:grid-cols-2 gap-5 mb-12">
+          <div className="grid md:grid-cols-2 gap-5 mb-12 max-w-3xl mx-auto">
             {active.map((gw, i) => <GiveawayCard key={gw.id} gw={gw} index={i} />)}
           </div>
         )}

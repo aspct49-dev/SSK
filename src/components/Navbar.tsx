@@ -7,10 +7,8 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LINKS = [
-  { label: 'Videos',    href: '#videos'    },
-  { label: 'Giveaways', href: '#giveaways' },
-  { label: 'About',     href: '#about'     },
-  { label: 'Socials',   href: '#socials'   },
+  { label: 'HOME',      href: '/'          },
+  { label: 'GIVEAWAY',  href: '/giveaways' },
 ];
 
 const GOLD   = '#C9A84C';
@@ -42,40 +40,21 @@ export default function Navbar() {
         }}
       >
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 40px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', height: '80px' }}>
 
-            {/* Logo + wordmark */}
-            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-              {/* Circular crop: objectFit cover on square container = cuts gray border, shows only central emblem */}
-              <div style={{
-                position: 'relative', width: '34px', height: '34px', flexShrink: 0,
-                borderRadius: '50%', overflow: 'hidden',
-                boxShadow: '0 0 0 1px rgba(201,168,76,0.25)',
-              }}>
-                <Image
-                  src="/logo.jpeg"
-                  alt="Sydney Slots King"
-                  fill
-                  sizes="34px"
-                  style={{ objectFit: 'cover', objectPosition: 'center 38%', mixBlendMode: 'screen', filter: 'contrast(1.3) saturate(1.2)', transform: 'scale(1.12)' }}
-                />
-              </div>
-              <span style={{
-                fontFamily:    '"Cormorant Garamond", Georgia, serif',
-                fontSize:      '0.85rem',
-                fontWeight:    600,
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color:         'rgba(245,230,200,0.72)',
-              }}
-                className="hidden sm:block"
-              >
-                Sydney Slots King
-              </span>
+            {/* Logo */}
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+              <Image
+                src="/sk-logo.png"
+                alt="Sydney Slots King"
+                width={677}
+                height={369}
+                style={{ width: '90px', height: 'auto', display: 'block' }}
+              />
             </Link>
 
-            {/* Desktop links */}
-            <div className="hidden md:flex" style={{ alignItems: 'center', gap: '32px' }}>
+            {/* Desktop links — centred column */}
+            <div className="hidden md:flex" style={{ alignItems: 'center', justifyContent: 'center', gap: '40px' }}>
               {LINKS.map(l => (
                 <a
                   key={l.href}
@@ -96,36 +75,12 @@ export default function Navbar() {
                   {l.label}
                 </a>
               ))}
-              <a
-                href="#giveaways"
-                style={{
-                  fontSize:      '0.68rem',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  fontWeight:    600,
-                  padding:       '10px 20px',
-                  border:        `1px solid rgba(201,168,76,0.3)`,
-                  background:    'rgba(201,168,76,0.07)',
-                  color:         GOLD_L,
-                  textDecoration:'none',
-                  transition:    'background 0.25s, border-color 0.25s',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background    = 'rgba(201,168,76,0.15)';
-                  e.currentTarget.style.borderColor   = 'rgba(201,168,76,0.55)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background    = 'rgba(201,168,76,0.07)';
-                  e.currentTarget.style.borderColor   = 'rgba(201,168,76,0.3)';
-                }}
-              >
-                Join Giveaway
-              </a>
             </div>
 
-            {/* Mobile burger */}
+            {/* Mobile burger — right column */}
             <button
               className="md:hidden"
+              style={{ justifySelf: 'end' }}
               onClick={() => setOpen(!open)}
               aria-label="Toggle menu"
               style={{
@@ -170,7 +125,7 @@ export default function Navbar() {
                   transition={{ delay: i * 0.06 }}
                   onClick={() => setOpen(false)}
                   style={{
-                    fontFamily:    '"Cormorant Garamond", Georgia, serif',
+                    fontFamily:    '"PPNeueCorp", system-ui, sans-serif',
                     fontSize:      '2rem',
                     fontWeight:    300,
                     color:         'rgba(255,255,255,0.65)',
@@ -185,41 +140,8 @@ export default function Navbar() {
                   {l.label}
                 </motion.a>
               ))}
-              <motion.a
-                href="#giveaways"
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: LINKS.length * 0.06 }}
-                onClick={() => setOpen(false)}
-                style={{
-                  display:       'block',
-                  marginTop:     '24px',
-                  padding:       '14px 24px',
-                  textAlign:     'center',
-                  fontSize:      '0.72rem',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  fontWeight:    700,
-                  background:    'rgba(201,168,76,0.1)',
-                  border:        '1px solid rgba(201,168,76,0.28)',
-                  color:         GOLD_L,
-                  textDecoration:'none',
-                }}
-              >
-                Join Giveaway
-              </motion.a>
             </div>
 
-            <div style={{
-              marginTop:     'auto',
-              paddingBottom: '40px',
-              fontSize:      '0.65rem',
-              letterSpacing: '0.22em',
-              textTransform: 'uppercase',
-              color:         'rgba(255,255,255,0.15)',
-            }}>
-              Sydney Slots King
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -26,8 +26,8 @@ const pose = (offset: number) => {
     x: `${-50 + offset * STEP}%`,
     y: '-50%',
     scale: a === 0 ? 1 : a === 1 ? 0.52 : 0.42,
-    opacity: a === 0 ? 1 : a === 1 ? 0.55 : 0,
-    filter: a === 0 ? 'brightness(1)' : 'brightness(0.55)',
+    opacity: a === 0 ? 1 : a === 1 ? 0.78 : 0,
+    filter: a === 0 ? 'brightness(1)' : 'brightness(0.65)',
     zIndex: 30 - a * 10,
   };
 };
@@ -127,31 +127,47 @@ export default function VideosSection() {
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               >
                 {isFront ? (
-                  <a
-                    href={`https://youtube.com/watch?v=${v.id}`}
-                    target="_blank" rel="noopener noreferrer"
-                    className="group block w-full h-full overflow-hidden rounded-2xl"
-                    style={{ boxShadow: '0 30px 80px rgba(0,0,0,0.65)' }}
+                  <div
+                    className="w-full h-full rounded-2xl"
+                    style={{
+                      padding: '5px',
+                      background: 'linear-gradient(135deg, #E8C97A 0%, #C9A84C 40%, #F0D060 60%, #C9A84C 80%, #B8932A 100%)',
+                      boxShadow: '0 30px 80px rgba(0,0,0,0.65), 0 0 32px rgba(201,168,76,0.35)',
+                    }}
                   >
-                    <Thumbnail id={v.id} title={v.title} />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ background: 'rgba(6,6,6,0.35)' }}>
-                      <div className="w-16 h-16 rounded-full flex items-center justify-center"
-                        style={{ background: '#FF0000', boxShadow: '0 0 28px rgba(255,0,0,0.45)' }}>
-                        <Play size={26} fill="#fff" style={{ color: '#fff', marginLeft: 3 }} />
+                    <a
+                      href={`https://youtube.com/watch?v=${v.id}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="group block w-full h-full overflow-hidden rounded-xl relative"
+                    >
+                      <Thumbnail id={v.id} title={v.title} />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ background: 'rgba(6,6,6,0.35)' }}>
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center"
+                          style={{ background: 'linear-gradient(135deg, #B8932A 0%, #E8C97A 50%, #B8932A 100%)', boxShadow: '0 0 28px rgba(201,168,76,0.55)' }}>
+                          <Play size={26} fill="#060606" style={{ color: '#060606', marginLeft: 3 }} />
+                        </div>
                       </div>
-                    </div>
-                  </a>
+                    </a>
+                  </div>
                 ) : (
-                  <button
-                    onClick={() => go(offset > 0 ? 1 : -1)}
-                    aria-label={offset > 0 ? 'Next video' : 'Previous video'}
-                    tabIndex={-1}
-                    className="block w-full h-full overflow-hidden rounded-xl cursor-pointer"
-                    style={{ pointerEvents: Math.abs(offset) >= 2 ? 'none' : 'auto' }}
+                  <div
+                    className="w-full h-full rounded-xl"
+                    style={{
+                      padding: '5px',
+                      background: 'linear-gradient(135deg, #FFE566 0%, #E8C97A 40%, #FFD700 60%, #E8C97A 100%)',
+                    }}
                   >
-                    <Thumbnail id={v.id} title={v.title} />
-                  </button>
+                    <button
+                      onClick={() => go(offset > 0 ? 1 : -1)}
+                      aria-label={offset > 0 ? 'Next video' : 'Previous video'}
+                      tabIndex={-1}
+                      className="relative block w-full h-full overflow-hidden rounded-lg cursor-pointer"
+                      style={{ pointerEvents: Math.abs(offset) >= 2 ? 'none' : 'auto' }}
+                    >
+                      <Thumbnail id={v.id} title={v.title} />
+                    </button>
+                  </div>
                 )}
               </motion.div>
             );
@@ -166,13 +182,20 @@ export default function VideosSection() {
               top: '50%',
               left: 'max(6px, calc(50% - clamp(150px, 25vw, 300px) - 48px))',
               transform: 'translateY(-50%)',
-              width: 38, height: 38,
-              background: 'rgba(0,0,0,0.55)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              color: 'rgba(255,255,255,0.8)',
+              width: 42, height: 42,
+              background: 'rgba(6,6,6,0.75)',
+              border: '2.5px solid rgba(201,168,76,0.85)',
+              color: '#E8C97A',
+              boxShadow: '0 0 14px rgba(201,168,76,0.25)',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.8)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(201,168,76,0.12)';
+              e.currentTarget.style.boxShadow = '0 0 22px rgba(201,168,76,0.5)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'rgba(6,6,6,0.75)';
+              e.currentTarget.style.boxShadow = '0 0 14px rgba(201,168,76,0.25)';
+            }}
           >
             <ChevronLeft size={18} />
           </button>
@@ -184,13 +207,20 @@ export default function VideosSection() {
               top: '50%',
               right: 'max(6px, calc(50% - clamp(150px, 25vw, 300px) - 48px))',
               transform: 'translateY(-50%)',
-              width: 38, height: 38,
-              background: 'rgba(0,0,0,0.55)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              color: 'rgba(255,255,255,0.8)',
+              width: 42, height: 42,
+              background: 'rgba(6,6,6,0.75)',
+              border: '2.5px solid rgba(201,168,76,0.85)',
+              color: '#E8C97A',
+              boxShadow: '0 0 14px rgba(201,168,76,0.25)',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.8)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.55)'; }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(201,168,76,0.12)';
+              e.currentTarget.style.boxShadow = '0 0 22px rgba(201,168,76,0.5)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'rgba(6,6,6,0.75)';
+              e.currentTarget.style.boxShadow = '0 0 14px rgba(201,168,76,0.25)';
+            }}
           >
             <ChevronRight size={18} />
           </button>
@@ -207,8 +237,8 @@ export default function VideosSection() {
               animate="center"
               exit="exit"
               transition={{ duration: 0.3 }}
-              className="font-medium uppercase mx-auto max-w-2xl"
-              style={{ letterSpacing: '0.08em', fontSize: '0.95rem', color: 'rgba(255,255,255,0.55)' }}
+              className="font-semibold uppercase mx-auto max-w-2xl"
+              style={{ letterSpacing: '0.06em', fontSize: '1.1rem', color: 'rgba(255,255,255,0.92)', textShadow: '0 0 24px rgba(201,168,76,0.18)' }}
             >
               {featured.title}
             </motion.p>
@@ -218,11 +248,11 @@ export default function VideosSection() {
             href={`https://youtube.com/watch?v=${featured.id}`}
             target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2.5 mt-7 px-9 py-3.5 rounded-lg text-xs font-bold uppercase transition-all duration-300"
-            style={{ letterSpacing: '0.12em', background: '#FF0000', color: '#ffffff', boxShadow: '0 10px 30px rgba(255,0,0,0.3)' }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#e60000'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#FF0000'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            style={{ letterSpacing: '0.12em', background: 'linear-gradient(135deg, #B8932A 0%, #E8C97A 50%, #B8932A 100%)', color: '#060606', boxShadow: '0 10px 30px rgba(201,168,76,0.3)' }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'brightness(1)'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
-            <Play size={13} fill="#fff" style={{ color: '#fff' }} /> Watch Now
+            <Play size={13} fill="#060606" style={{ color: '#060606' }} /> Watch Now
           </a>
         </div>
       </div>

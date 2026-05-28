@@ -38,8 +38,8 @@ const config: Config = {
         champagne: '#F5E6C8',
       },
       fontFamily: {
-        display: ['Inter', 'system-ui', 'sans-serif'],
-        sans:    ['Inter', 'system-ui', 'sans-serif'],
+        display: ['PPNeueCorp', 'system-ui', 'sans-serif'],
+        sans:    ['PPNeueCorp', 'system-ui', 'sans-serif'],
         mono:    ['monospace'],
       },
       backgroundImage: {

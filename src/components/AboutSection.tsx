@@ -13,7 +13,7 @@ const stats = [
 export default function AboutSection() {
   return (
     <section id="about" className="relative py-24 overflow-hidden" style={{ background: '#0a0a0a' }}>
-      <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-10 text-center">
+      <div className="relative max-w-5xl mx-auto px-6 lg:px-10 text-center">
 
         {/* Label */}
         <motion.div
@@ -103,12 +103,20 @@ export default function AboutSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 + i * 0.07 }}
               className="py-7 px-4 flex flex-col items-center gap-1.5"
-              style={{ border: '1px solid rgba(201,168,76,0.14)', background: '#050505', boxShadow: '0 0 14px rgba(201,168,76,0.12)', transition: 'box-shadow 0.3s, border-color 0.3s' }}
+              style={{ border: '1px solid rgba(201,168,76,0.14)', background: '#000000', boxShadow: '0 0 14px rgba(201,168,76,0.12)', transition: 'box-shadow 0.3s, border-color 0.3s', position: 'relative', zIndex: 38, overflow: 'hidden' }}
               onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 0 30px rgba(201,168,76,0.35)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 0 14px rgba(201,168,76,0.12)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.14)'; }}
             >
-              <div className="gold-text font-display font-semibold" style={{ fontSize: '1.8rem', lineHeight: 1 }}>{val}</div>
-              <div className="text-[10px] uppercase font-medium" style={{ letterSpacing: '0.18em', color: 'rgba(255,255,255,0.3)' }}>{label}</div>
+              {/* Shimmer */}
+              <div aria-hidden style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                width: '50%',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.07) 40%, rgba(232,201,122,0.13) 50%, rgba(201,168,76,0.07) 60%, transparent 100%)',
+                animation: 'card-shimmer 3.5s ease-in-out infinite',
+                animationDelay: `${i * 0.9}s`,
+              }} />
+              <div className="gold-text font-display font-semibold" style={{ fontSize: '1.8rem', lineHeight: 1, position: 'relative', zIndex: 1 }}>{val}</div>
+              <div className="text-[10px] uppercase font-medium" style={{ letterSpacing: '0.18em', color: 'rgba(255,255,255,0.3)', position: 'relative', zIndex: 1 }}>{label}</div>
             </motion.div>
           ))}
         </motion.div>

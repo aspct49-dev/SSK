@@ -2,7 +2,6 @@ import Navbar        from '@/components/Navbar';
 import Hero           from '@/components/Hero';
 import SponsorSection from '@/components/SponsorSection';
 import VideosSection  from '@/components/VideosSection';
-import GiveawaySection from '@/components/GiveawaySection';
 import AboutSection   from '@/components/AboutSection';
 import SocialsSection from '@/components/SocialsSection';
 import Footer         from '@/components/Footer';
@@ -57,7 +56,7 @@ export default function Home() {
         <Hero />
         <SponsorSection />
         <VideosSection />
-        <GiveawaySection />
+        <div className="divider-gold" />
         <AboutSection />
         <SocialsSection />
         <Footer />

@@ -7,8 +7,11 @@ import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LINKS = [
-  { label: 'HOME',      href: '/'          },
-  { label: 'GIVEAWAY',  href: '/giveaways' },
+  { label: 'HOME',       href: '/'          },
+  { label: 'HIGHLIGHTS', href: '/#videos'   },
+  { label: 'GIVEAWAY',   href: '/giveaways' },
+  { label: 'ABOUT',      href: '/#about'    },
+  { label: 'SOCIALS',    href: '/#socials'  },
 ];
 
 const GOLD   = '#C9A84C';

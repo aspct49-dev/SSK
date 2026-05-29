@@ -146,7 +146,7 @@ export default function SponsorSection() {
                       className="font-bold gold-text"
                       style={{ fontSize: '1.35rem', letterSpacing: '0.18em' }}
                     >
-                      SYDKINGVIP
+                      SSK
                     </span>
                     <span style={{ color: 'rgba(201,168,76,0.55)', fontSize: '1rem', transform: 'scaleX(-1)', display: 'inline-block' }}>❧</span>
                   </div>

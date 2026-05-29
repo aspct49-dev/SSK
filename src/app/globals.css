@@ -105,6 +105,30 @@ button:focus-visible, a:focus-visible {
   40%, 60%  { opacity: 1; transform: scale(1)   rotate(45deg); }
 }
 
+/* ── Hero headline shine sweep ──────────────────────────────────────── */
+@keyframes text-shine {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.hero-shine {
+  background: linear-gradient(
+    105deg,
+    #B8932A   0%,
+    #C9A84C  25%,
+    #E8C97A  40%,
+    #F5DFA0  50%,
+    #E8C97A  60%,
+    #C9A84C  75%,
+    #B8932A 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shine 4s linear infinite;
+}
+
 /* ── Card shimmer sweep ─────────────────────────────────────────────── */
 @keyframes card-shimmer {
   0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }

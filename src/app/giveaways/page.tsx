@@ -1,6 +1,5 @@
-import Navbar         from '@/components/Navbar';
-import GiveawaySection from '@/components/GiveawaySection';
-import Footer          from '@/components/Footer';
+import Navbar from '@/components/Navbar';
+import Footer  from '@/components/Footer';
 import type { CSSProperties } from 'react';
 
 const wrapStyle: CSSProperties = {
@@ -29,8 +28,16 @@ export default function GiveawaysPage() {
       <div aria-hidden="true" style={patternStyle} />
       <div style={{ position: 'relative' }}>
         <Navbar />
-        <div style={{ paddingTop: '80px' }}>
-          <GiveawaySection />
+        <div style={{ paddingTop: '80px', minHeight: 'calc(100vh - 80px)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' }}>
+          <h1
+            className="gold-text font-bold uppercase"
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', letterSpacing: '0.1em' }}
+          >
+            Coming Soon
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.3)', letterSpacing: '0.2em', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+            Giveaways launching shortly
+          </p>
         </div>
         <Footer />
       </div>

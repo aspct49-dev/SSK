@@ -79,7 +79,7 @@ export default function Hero() {
               Australia&apos;s
             </span>
             <span
-              className="block gold-text"
+              className="block hero-shine"
               style={{ letterSpacing: '0.04em', lineHeight: 0.95 }}
             >
               #1 IRL
@@ -91,7 +91,7 @@ export default function Hero() {
               Slots
             </span>
             <span
-              className="block gold-text"
+              className="block hero-shine"
               style={{ letterSpacing: '0.04em' }}
             >
               Creator
@@ -146,41 +146,11 @@ export default function Hero() {
             width={677}
             height={369}
             priority
-            style={{ width: 'clamp(280px, 42vw, 580px)', height: 'auto', display: 'block' }}
+            style={{ width: 'clamp(340px, 46vw, 660px)', height: 'auto', display: 'block' }}
           />
         </motion.div>
       </div>
 
-      {/* Stats bar */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
-        className="relative z-10 flex-shrink-0 flex items-center justify-center gap-8 sm:gap-16 py-5 sm:py-6"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-      >
-        {[
-          { value: '13K+', label: 'Subscribers' },
-          { value: '10M+', label: 'Total Views' },
-          { value: '1K+',  label: 'Videos' },
-          { value: '100K', label: 'Best Video' },
-        ].map(({ value, label }) => (
-          <div key={label} className="flex flex-col items-center gap-0.5">
-            <span
-              className="gold-text font-semibold leading-none"
-              style={{ fontSize: 'clamp(1rem, 2.5vw, 1.55rem)' }}
-            >
-              {value}
-            </span>
-            <span
-              className="uppercase hidden sm:block"
-              style={{ fontSize: '9px', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.2)' }}
-            >
-              {label}
-            </span>
-          </div>
-        ))}
-      </motion.div>
     </section>
   );
 }

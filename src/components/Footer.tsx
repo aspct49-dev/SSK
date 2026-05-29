@@ -117,11 +117,18 @@ export default function Footer() {
                 href="https://zesty.bet"
                 target="_blank"
                 rel="noopener noreferrer sponsored"
-                className="gold-text text-sm font-medium"
+                className="inline-block mt-1"
+                aria-label="Zesty.Bet"
               >
-                Zesty.Bet
+                <Image
+                  src="/zesty-logo-crop.png"
+                  alt="Zesty.Bet"
+                  width={1460}
+                  height={660}
+                  style={{ width: '130px', height: 'auto', display: 'block' }}
+                />
               </a>
-              <p className="text-[10px] font-light mt-0.5" style={{ color: 'rgba(255,255,255,0.18)' }}>
+              <p className="text-[10px] font-light mt-1.5" style={{ color: 'rgba(255,255,255,0.18)' }}>
                 Official casino partner
               </p>
             </div>

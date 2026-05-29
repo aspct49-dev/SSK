@@ -83,10 +83,10 @@ export default function Navbar() {
             {/* Mobile burger — right column */}
             <button
               className="md:hidden"
-              style={{ justifySelf: 'end' }}
               onClick={() => setOpen(!open)}
               aria-label="Toggle menu"
               style={{
+                justifySelf: 'end',
                 background: 'none', border: 'none', cursor: 'pointer',
                 color: 'rgba(255,255,255,0.6)', padding: '4px',
               }}
